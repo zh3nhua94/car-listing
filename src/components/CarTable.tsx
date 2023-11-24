@@ -121,7 +121,7 @@ const CarTable = ({ allCars }: CarCardProps) => {
 					type="number"
 					id="number-input"
 					aria-describedby="helper-text-explanation"
-					className=" text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 h-[48px] pl-12 p-4 rounded-full max-sm:rounded-full bg-light-white outline-none cursor-pointer"
+					className=" text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full  h-[48px] pl-12 p-4 rounded-full max-sm:rounded-full bg-light-white outline-none cursor-pointer"
 					placeholder="10"
 					onChange={(e) => handleItemAmount(e)}
 					min={1}
@@ -136,8 +136,8 @@ const CarTable = ({ allCars }: CarCardProps) => {
 						ref={scrollRef}
 					>
 						<div className="relative overflow-x-auto">
-							<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-								<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+							<table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
+								<thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
 									<tr>
 										<th
 											scope="col"
@@ -170,11 +170,11 @@ const CarTable = ({ allCars }: CarCardProps) => {
 										records?.map((car) => (
 											<tr
 												key={car.brand + car.model}
-												className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+												className="bg-white border-b "
 											>
 												<th
 													scope="row"
-													className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+													className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
 												>
 													{car.brand}
 												</th>
@@ -184,7 +184,7 @@ const CarTable = ({ allCars }: CarCardProps) => {
 											</tr>
 										))
 									) : (
-										<tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+										<tr className="bg-white border-b ">
 											<td className="px-6 py-4">Nothing is found.</td>
 										</tr>
 									)}
