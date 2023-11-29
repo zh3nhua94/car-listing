@@ -11,7 +11,7 @@ interface CarCardProps {
 const CarGrid = ({ allCars }: CarCardProps) => {
 	const searchParams = useSearchParams();
 	const isDataEmpty = !Array.isArray(allCars) || allCars.length < 1 || !allCars;
-	const [itemPerPage, setItemPerPage] = useState(6);
+	const [itemPerPage, setItemPerPage] = useState(12);
 	const [next, setNext] = useState(itemPerPage);
 	const [cars, setCars] = useState<CarProps[]>([]);
 

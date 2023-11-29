@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { CarProps } from "@/types";
 import { useSearchParams } from "next/navigation";
 import Pagination from "./Pagination";
+import SortProduction from "./SortProduction";
 
 interface CarCardProps {
 	allCars: CarProps[];
@@ -19,6 +20,7 @@ const CarTable = ({ allCars }: CarCardProps) => {
 	const [maxPageLimit, setMaxPageLimit] = useState(5);
 	const [minPageLimit, setMinPageLimit] = useState(0);
 	const scrollRef = useRef<HTMLDivElement>(null);
+	const [sortProductionAsc, setSortProductionAsc] = useState<string>("");
 
 	//get carbrands from car data
 	const carColors: Array<string> = [];
@@ -40,14 +42,26 @@ const CarTable = ({ allCars }: CarCardProps) => {
 		setCurrentPage(1);
 		setMaxPageLimit(5);
 		setMinPageLimit(0);
+		//Pagination
 	}, [searchParams]);
 
 	useEffect(() => {
 		PaginationPages();
 	}, [currentPage, cars, itemPerPage]);
 
+	//Sort Production
+	const sortProdAsc = (a: any, b: any) => {
+		return a.isInProduction - b.isInProduction;
+	};
+
+	const sortProdDsc = (a: any, b: any) => {
+		return b.isInProduction - a.isInProduction;
+	};
+
 	const fetchDataFromQuery = () => {
 		const allQueryParams = Object.fromEntries(searchParams.entries());
+		const sort = allQueryParams.sortprod;
+		delete allQueryParams.sortprod;
 		delete allQueryParams.limit;
 		const allQuery = Object.values(allQueryParams);
 		const filteredData = allCars.filter((item) => {
@@ -60,13 +74,23 @@ const CarTable = ({ allCars }: CarCardProps) => {
 			//match query string with values
 			return allQuery.length !== 0 ? allQuery.every((q) => (q !== null ? values.toString().includes(q) : false)) : true;
 		});
-
-		setCars(filteredData);
+		setCars(
+			sort === "A-Z" ? filteredData.sort(sortProdAsc) : sort === "Z-A" ? filteredData.sort(sortProdDsc) : filteredData
+		);
 	};
+
 	//Pagination
 	const lastSliceIndex = currentPage * itemPerPage;
 	const firstSliceIndex = lastSliceIndex - itemPerPage;
-	const records = cars.slice(firstSliceIndex, lastSliceIndex);
+	const generateRecords = (cars: any) => {
+		return sortProductionAsc === "A-Z"
+			? cars.sort(sortProdAsc).slice(firstSliceIndex, lastSliceIndex)
+			: sortProductionAsc === "Z-A"
+			? cars.sort(sortProdDsc).slice(firstSliceIndex, lastSliceIndex)
+			: cars.slice(firstSliceIndex, lastSliceIndex);
+	};
+	const records = generateRecords(cars);
+
 	const PaginationPages = () => {
 		if (itemPerPage !== 0) {
 			const totalPage = Math.ceil(cars.length / itemPerPage);
@@ -106,6 +130,13 @@ const CarTable = ({ allCars }: CarCardProps) => {
 						text="Color"
 						options={colorEntries}
 					/>
+					<div className="hidden">
+						<SortProduction
+							sortProductionAsc={sortProductionAsc}
+							setSortProductionAsc={setSortProductionAsc}
+							text="SortProd"
+						/>
+					</div>
 				</div>
 			</div>
 
@@ -167,7 +198,7 @@ const CarTable = ({ allCars }: CarCardProps) => {
 								</thead>
 								<tbody>
 									{cars.length !== 0 ? (
-										records?.map((car) => (
+										records?.map((car: any) => (
 											<tr
 												key={car.brand + car.model}
 												className="bg-white border-b "
